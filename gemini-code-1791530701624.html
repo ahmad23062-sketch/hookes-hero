@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOOKE'S HERO: Misi Penjaga Pegas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- HEADER & NAVBAR GLOBAL -->
+  <header id="main-header" class="hidden">
+    <div class="logo-area">
+      <h1>HOOKE'S HERO</h1>
+      <span class="tagline">Misi Penjaga Pegas</span>
+    </div>
+    <div class="user-stats">
+      <div class="coin-badge">🪙 <span id="coin-count">0</span> Koin</div>
+      <div class="player-info-mini">
+        <span id="header-avatar">👦</span>
+        <span id="header-username">Hero</span>
+      </div>
+    </div>
+  </header>
+
+  <nav id="main-nav" class="hidden">
+    <button class="nav-btn active" onclick="switchTab('dashboard')">🏠 Beranda</button>
+    <button class="nav-btn" onclick="switchTab('akademi')">📚 Akademi Pegas</button>
+    <button class="nav-btn" onclick="switchTab('peta')">🗺️ Peta Petualangan</button>
+    <button class="nav-btn" onclick="switchTab('toko')">🛍️ Toko Aksesori</button>
+    <button class="nav-btn" onclick="switchTab('profil')">👤 Profil Saya</button>
+  </nav>
+
+  <main id="app-container">
+    <!-- HALAMAN LANDING / REGISTRASI -->
+    <section id="view-landing" class="view">
+      <div class="landing-card">
+        <h1>HOOKE'S HERO</h1>
+        <p class="subtitle">Misi Penjaga Pegas: Jelajahi Rahasia Elastisitas & Hukum Hooke!</p>
+        
+        <div class="registration-form">
+          <label for="player-name-input">Masukkan Nama Pahlawanmu:</label>
+          <input type="text" id="player-name-input" placeholder="Contoh: Budi Penjaga Pegas" maxlength="20">
+          
+          <label>Pilih Avatar Utama:</label>
+          <div class="avatar-selector">
+            <div class="avatar-option selected" onclick="selectAvatar('boy', this)">
+              <div class="avatar-icon">👦</div>
+              <p>Pria</p>
+            </div>
+            <div class="avatar-option" onclick="selectAvatar('girl', this)">
+              <div class="avatar-icon">👧</div>
+              <p>Wanita</p>
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="startGame()">MASUK KE DUNIA PEGAS 🚀</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view hidden">
+      <div class="dashboard-grid">
+        <div class="profile-card">
+          <div class="avatar-preview-box">
+            <div id="dash-avatar" class="avatar-large">👦</div>
+            <div id="equipped-acc-layer" class="acc-layer"></div>
+          </div>
+          <h2 id="dash-username">Pahlawan</h2>
+          <p class="level-badge">Level Tertinggi: <span id="dash-max-level">1</span>/10</p>
+        </div>
+
+        <div class="stats-summary-card">
+          <h3>📊 Ringkasan Progres</h3>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-val" id="dash-coins">0</span>
+              <span class="stat-lbl">🪙 Total Koin</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" id="dash-materials-done">0/7</span>
+              <span class="stat-lbl">📚 Materi Selesai</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" id="dash-quests-done">0/10</span>
+              <span class="stat-lbl">⚔️ Quest Selesai</span>
+            </div>
+          </div>
+          <div class="quick-nav">
+            <button class="btn-secondary" onclick="switchTab('akademi')">Mulai Belajar Materi</button>
+            <button class="btn-primary" onclick="switchTab('peta')">Lanjut Bertualang</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AKADEMI PEGAS (MATERI) -->
+    <section id="view-akademi" class="view hidden">
+      <h2>📚 Akademi Pegas</h2>
+      <p class="section-desc">Pelajari 7 materi dasar untuk mendapatkan hingga 350 koin!</p>
+      <div id="materials-list" class="grid-container"></div>
+
+      <!-- MODAL BACA MATERI -->
+      <div id="material-modal" class="modal hidden">
+        <div class="modal-content">
+          <span class="close-btn" onclick="closeMaterialModal()">&times;</span>
+          <h2 id="mat-modal-title">Judul Materi</h2>
+          <div class="mat-body" id="mat-modal-body"></div>
+          <div class="mat-footer">
+            <button id="claim-mat-btn" class="btn-primary">TANDAI SELESAI & KLAIM 50 KOIN 🪙</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PETA PETUALANGAN (QUEST) -->
+    <section id="view-peta" class="view hidden">
+      <h2>🗺️ Peta Petualangan Pegas</h2>
+      <p class="section-desc">Selesaikan 10 tantangan quest untuk mengumpulkan total 1.000 koin!</p>
+      <div class="peta-bg-wrapper">
+        <img src="assets/peta.jpg" alt="Peta Petualangan" class="peta-img-bg" onerror="this.style.display='none'">
+        <div id="quest-nodes-container" class="quest-nodes-grid"></div>
+      </div>
+
+      <!-- MODAL QUEST KUIS -->
+      <div id="quest-modal" class="modal hidden">
+        <div class="modal-content">
+          <span class="close-btn" onclick="closeQuestModal()">&times;</span>
+          <h2 id="quest-modal-title">Level Quest</h2>
+          <div id="quest-intro-text" class="quest-intro"></div>
+          <div id="quest-quiz-area" class="quiz-box">
+            <p id="quiz-question" class="question-text"></p>
+            <div id="quiz-options" class="options-group"></div>
+            <div id="quiz-feedback" class="feedback-box hidden"></div>
+          </div>
+          <div class="quest-footer">
+            <button id="next-quest-btn" class="btn-primary hidden" onclick="closeQuestModal()">Lanjutkan Petualangan ➡️</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOKO AKSESORI -->
+    <section id="view-toko" class="view hidden">
+      <h2>🛍️ Toko Aksesori Pahlawan</h2>
+      <p class="section-desc">Gunakan koin hasil quest untuk melengkapi gaya avatar milikmu!</p>
+      <div class="toko-layout">
+        <div class="toko-avatar-display">
+          <div class="avatar-preview-box">
+            <div id="shop-avatar" class="avatar-large">👦</div>
+            <div id="shop-equipped-acc" class="acc-layer"></div>
+          </div>
+          <p>Tampilan Avatar Sekarang</p>
+        </div>
+        <div id="shop-items-grid" class="shop-grid"></div>
+      </div>
+    </section>
+
+    <!-- PROFIL & RESET -->
+    <section id="view-profil" class="view hidden">
+      <h2>👤 Profil Pahlawan</h2>
+      <div class="profil-card">
+        <p><strong>Nama:</strong> <span id="prof-name">-</span></p>
+        <p><strong>Avatar:</strong> <span id="prof-gender">-</span></p>
+        <p><strong>Total Koin Saat Ini:</strong> <span id="prof-coins">0</span> 🪙</p>
+        <hr>
+        <h3>⚙️ Pengaturan Data</h3>
+        <button class="btn-danger" onclick="resetGameProgress()">🔄 RESET PROGRES GAME</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
